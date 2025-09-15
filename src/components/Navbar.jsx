@@ -5,36 +5,47 @@ import dynamic from "next/dynamic";
 
 // --- Nav items ---
 const navItems = [
-  { label: 'About', to: 'about-us' },
-  { label: 'Services', to: 'services' },
-  { label: 'Projects', to: 'projects' },
-  { label: 'Gallery', to: 'career' },
-  { label: 'Contact', to: 'contact-us' },
+  { label: "About", to: "about-us" },
+  { label: "Services", to: "services" },
+  // { label: "Projects", to: "projects" },
+  // { label: "Gallery", to: "career" },
+  { label: "Contact", to: "contact-us" },
 ];
 
 // --- Utility: Smooth scroll ---
 function scrollToSection(id) {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
 
 // --- Per-letter gradient logo ---
-const logo = "Jindam Elevations";
+const logo = "FS  Enterprises";
 
 // --- Particle (floating circles) configuration ---
 const PARTICLE_COUNT = 25;
 const PARTICLE_COLORS = [
   "bg-purple-200/50",
   "bg-blue-100/60",
-  "bg-pink-100/50"
+  "bg-pink-100/50",
 ];
 
 // --- Variants ---
 const navbarVariants = {
   initial: { y: -100, opacity: 0, filter: "blur(15px)" },
-  animate: { y: 0, opacity: 1, filter: "blur(0px)", transition: { type: "spring", stiffness: 70, damping: 16, mass: 1.5, delay: 0.1 } }
+  animate: {
+    y: 0,
+    opacity: 1,
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 70,
+      damping: 16,
+      mass: 1.5,
+      delay: 0.1,
+    },
+  },
 };
 
 const navItemVariants = {
@@ -46,23 +57,38 @@ const navItemVariants = {
     rotateY: 0,
     z: 0,
     boxShadow: "0 8px 24px rgba(120, 80, 255, 0.15)",
-    transition: { type: "spring", stiffness: 220, damping: 20 }
+    transition: { type: "spring", stiffness: 220, damping: 20 },
   },
-  tap: { scale: 0.97 }
+  tap: { scale: 0.97 },
 };
 
 const underlineVariants = {
   initial: { scaleX: 0 },
-  animate: { scaleX: 1, transition: { type: 'spring', stiffness: 350, damping: 25 } }
+  animate: {
+    scaleX: 1,
+    transition: { type: "spring", stiffness: 350, damping: 25 },
+  },
 };
 
 const logoLetterVariants = {
   hidden: { y: -25, opacity: 0, scale: 0.7 },
-  visible: i => ({
-    y: 0, opacity: 1, scale: 1,
-    transition: { delay: i * 0.05, type: "spring", stiffness: 150, damping: 14 }
+  visible: (i) => ({
+    y: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: i * 0.05,
+      type: "spring",
+      stiffness: 150,
+      damping: 14,
+    },
   }),
-  hover: { y: -8, color: "#8b5cf6", scale: 1.15, transition: { type: "spring", stiffness: 200, damping: 10 } }
+  hover: {
+    y: -8,
+    color: "#8b5cf6",
+    scale: 1.15,
+    transition: { type: "spring", stiffness: 200, damping: 10 },
+  },
 };
 
 // --- Particle floating animation ---
@@ -78,23 +104,26 @@ const getParticleMotionProps = (i) => ({
       repeat: Infinity,
       repeatType: "reverse",
       ease: "easeInOut",
-      delay: (i * 0.18) % 3
-    }
-  }
+      delay: (i * 0.18) % 3,
+    },
+  },
 });
 
 // Particles component that only renders on client
 const Particles = ({ isDesktop }) => {
   const [particles, setParticles] = useState([]);
-  
+
   useEffect(() => {
-    const generatedParticles = Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
-      id: i,
-      width: 6 + (i * 5) % 18,
-      height: 6 + (i * 4) % 18,
-      left: (i * 11) % 100,
-      top: (i * 15) % 30 - 10,
-    }));
+    const generatedParticles = Array.from(
+      { length: PARTICLE_COUNT },
+      (_, i) => ({
+        id: i,
+        width: 6 + ((i * 5) % 18),
+        height: 6 + ((i * 4) % 18),
+        left: (i * 11) % 100,
+        top: ((i * 15) % 30) - 10,
+      })
+    );
     setParticles(generatedParticles);
   }, []);
 
@@ -106,14 +135,16 @@ const Particles = ({ isDesktop }) => {
         <motion.div
           key={particle.id}
           {...getParticleMotionProps(i)}
-          className={`absolute rounded-full ${PARTICLE_COLORS[i % PARTICLE_COLORS.length]}`}
+          className={`absolute rounded-full ${
+            PARTICLE_COLORS[i % PARTICLE_COLORS.length]
+          }`}
           style={{
             width: `${particle.width}px`,
             height: `${particle.height}px`,
             left: `${particle.left}%`,
             top: `${particle.top}px`,
-            filter: 'blur(1.5px)',
-            zIndex: 0
+            filter: "blur(1.5px)",
+            zIndex: 0,
           }}
         />
       ))}
@@ -124,7 +155,7 @@ const Particles = ({ isDesktop }) => {
 // --- Component ---
 function NavbarComponent() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
+  const [activeSection, setActiveSection] = useState("hero");
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const observerRef = useRef(null);
@@ -134,7 +165,7 @@ function NavbarComponent() {
   // Handle mounting and responsive behavior
   useEffect(() => {
     setMounted(true);
-    
+
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024);
       if (window.innerWidth >= 1024 && isDrawerOpen) {
@@ -144,11 +175,11 @@ function NavbarComponent() {
         setNavbarHeight(navbarRef.current.offsetHeight);
       }
     };
-    
+
     handleResize();
-    window.addEventListener('resize', handleResize);
-    
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, [isDrawerOpen]);
 
   useEffect(() => {
@@ -160,23 +191,28 @@ function NavbarComponent() {
   // Active section logic
   useEffect(() => {
     if (!mounted || navbarHeight === 0) return;
-    
+
     const rootMarginTop = `-${navbarHeight + 10}px`;
-    const options = { root: null, rootMargin: `${rootMarginTop} 0px -70% 0px`, threshold: 0 };
+    const options = {
+      root: null,
+      rootMargin: `${rootMarginTop} 0px -70% 0px`,
+      threshold: 0,
+    };
     const callback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) setActiveSection(entry.target.id);
       });
     };
-    
+
     observerRef.current = new IntersectionObserver(callback, options);
-    const sections = ['hero', ...navItems.map(item => item.to)]
-      .map(id => document.getElementById(id)).filter(Boolean);
-    sections.forEach(sec => observerRef.current?.observe(sec));
-    
+    const sections = ["hero", ...navItems.map((item) => item.to)]
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    sections.forEach((sec) => observerRef.current?.observe(sec));
+
     return () => {
       if (observerRef.current) {
-        sections.forEach(sec => observerRef.current?.unobserve(sec));
+        sections.forEach((sec) => observerRef.current?.unobserve(sec));
         observerRef.current.disconnect();
       }
     };
@@ -184,7 +220,10 @@ function NavbarComponent() {
 
   // Propagate navbar height to a CSS variable for HeroSection
   useEffect(() => {
-    document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
+    document.documentElement.style.setProperty(
+      "--navbar-height",
+      `${navbarHeight}px`
+    );
   }, [navbarHeight]);
 
   // Pre-mount rendering (improved placeholder)
@@ -205,7 +244,7 @@ function NavbarComponent() {
     <>
       {/* Floating animated particles (Desktop only for perf) */}
       <Particles isDesktop={isDesktop} />
-      
+
       {/* Main Navbar */}
       <motion.nav
         ref={navbarRef}
@@ -217,32 +256,39 @@ function NavbarComponent() {
         <div className="mx-auto flex items-center justify-between px-4 sm:px-8 py-4 max-w-7xl relative z-10 h-20 sm:h-24">
           {/* LOGO: Per-letter animation, gradient, hover */}
           <motion.button
-            onClick={() => scrollToSection('hero')}
+            onClick={() => scrollToSection("hero")}
             className="text-2xl sm:text-3xl font-extrabold tracking-wide bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-500 text-transparent bg-clip-text drop-shadow-lg relative flex items-center h-full"
             aria-label="Scroll to Home section"
             whileTap={{ scale: 0.96 }}
-            style={{ letterSpacing: '0.06em' }}
+            style={{ letterSpacing: "0.06em" }}
           >
             <motion.span
               initial="hidden"
               animate="visible"
               whileHover="hover"
               transition={{ staggerChildren: 0.03 }}
-              className="inline-block"
             >
-              {[...logo].map((char, i) => (
-                <motion.span
-                  key={i}
-                  custom={i}
-                  variants={logoLetterVariants}
-                  className="inline-block"
-                >
-                  {char}
-                </motion.span>
+              {logo.split(" ").map((word, i, arr) => (
+                <span key={i} className="inline-block">
+                  {[...word].map((char, j) => (
+                    <motion.span
+                      key={j}
+                      custom={j}
+                      variants={logoLetterVariants}
+                      className="inline-block"
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                  {/* Add a space after each word except the last one */}
+                  {i < arr.length - 1 && (
+                    <span className="inline-block">&nbsp;</span>
+                  )}
+                </span>
               ))}
             </motion.span>
             {/* Underline animation for logo when 'hero' is active */}
-            {activeSection === 'hero' && (
+            {activeSection === "hero" && (
               <motion.div
                 layoutId="underline-logo"
                 variants={underlineVariants}
@@ -252,7 +298,7 @@ function NavbarComponent() {
               />
             )}
           </motion.button>
-          
+
           {/* Desktop Navigation */}
           {isDesktop && (
             <ul className="flex gap-4 xl:gap-6 ml-4">
@@ -269,12 +315,17 @@ function NavbarComponent() {
                     onClick={() => scrollToSection(to)}
                     className={`
                       px-6 py-3 rounded-xl font-medium relative transition-all duration-200 text-base xl:text-lg
-                      ${activeSection === to
-                        ? "text-purple-700 bg-purple-200/50 font-semibold border border-purple-300 shadow-md"
-                        : "text-gray-700 hover:text-purple-600 hover:bg-purple-50/50"}
+                      ${
+                        activeSection === to
+                          ? "text-purple-700 bg-purple-200/50 font-semibold border border-purple-300 shadow-md"
+                          : "text-gray-700 hover:text-purple-600 hover:bg-purple-50/50"
+                      }
                     `}
                     style={{
-                      boxShadow: activeSection === to ? "0 4px 15px rgba(120, 80, 255, 0.15)" : "none"
+                      boxShadow:
+                        activeSection === to
+                          ? "0 4px 15px rgba(120, 80, 255, 0.15)"
+                          : "none",
                     }}
                   >
                     {label}
@@ -285,7 +336,11 @@ function NavbarComponent() {
                         className="absolute left-1/2 -translate-x-1/2 bottom-0 h-[3px] w-4/5 rounded-t-full bg-gradient-to-r from-purple-500 via-blue-400 to-cyan-400"
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
-                        transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 450,
+                          damping: 25,
+                        }}
                       />
                     )}
                   </motion.button>
@@ -293,7 +348,7 @@ function NavbarComponent() {
               ))}
             </ul>
           )}
-          
+
           {/* Hamburger (Mobile) - Animated icon - Only visible when drawer is NOT open */}
           {!isDesktop && !isDrawerOpen && (
             <motion.button
@@ -333,22 +388,39 @@ function NavbarComponent() {
               className="absolute top-7 right-7 p-2 text-gray-700 hover:text-purple-600 focus:outline-none z-[101]" // Z-index higher than drawer
               aria-label="Close navigation menu"
             >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </motion.button>
           )}
         </div>
       </motion.nav>
-      
+
       {/* Mobile Drawer */}
       <AnimatePresence>
         {isDrawerOpen && !isDesktop && (
           <motion.div
             initial={{ x: "100vw", opacity: 0 }}
-            animate={{ x: 0, opacity: 1, transition: { type: "spring", stiffness: 100, damping: 20 } }}
-            exit={{ x: "100vw", opacity: 0, transition: { type: "spring", stiffness: 100, damping: 18 } }}
+            animate={{
+              x: 0,
+              opacity: 1,
+              transition: { type: "spring", stiffness: 100, damping: 20 },
+            }}
+            exit={{
+              x: "100vw",
+              opacity: 0,
+              transition: { type: "spring", stiffness: 100, damping: 18 },
+            }}
             className="fixed inset-0 z-[99] bg-purple-50/95 backdrop-blur-xl flex flex-col items-center justify-center pt-24 pb-8 overflow-y-auto"
           >
             {/* The close button is now outside this div but within the Navbar component for better z-indexing control */}
@@ -370,9 +442,11 @@ function NavbarComponent() {
                     className={`
                       px-10 py-5 text-2xl font-semibold rounded-xl transition-all duration-200 w-full
                       bg-purple-100/70 hover:bg-purple-200/80 shadow-lg hover:shadow-xl
-                      ${activeSection === to
-                        ? "text-purple-700 bg-purple-200/90 font-bold border border-purple-400"
-                        : "text-gray-700 hover:text-purple-600"}
+                      ${
+                        activeSection === to
+                          ? "text-purple-700 bg-purple-200/90 font-bold border border-purple-400"
+                          : "text-gray-700 hover:text-purple-600"
+                      }
                     `}
                   >
                     {label}
@@ -394,12 +468,12 @@ const Navbar = dynamic(() => Promise.resolve(NavbarComponent), {
     <nav className="fixed top-0 z-50 w-full bg-purple-100/80 backdrop-blur-md shadow-lg transition-all duration-300 h-20 sm:h-24 flex items-center">
       <div className="mx-auto flex items-center justify-between px-4 sm:px-8 py-4 max-w-7xl relative z-10 w-full">
         <div className="text-2xl sm:text-3xl font-extrabold tracking-wide bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-500 text-transparent bg-clip-text drop-shadow-xl animate-pulse">
-          Jindam Elevations
+          F S Enterprises{" "}
         </div>
         <div className="h-8 w-8 bg-purple-300 rounded-md animate-pulse"></div>
       </div>
     </nav>
-  )
+  ),
 });
 
 export default Navbar;

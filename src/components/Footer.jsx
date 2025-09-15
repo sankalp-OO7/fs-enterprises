@@ -1,7 +1,7 @@
-'use client'; // This component uses Framer Motion, so it needs to be a client component
+"use client"; // This component uses Framer Motion, so it needs to be a client component
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 // --- Framer Motion Variants ---
 
@@ -13,7 +13,7 @@ const footerVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   },
 };
@@ -65,7 +65,6 @@ const logoVariants = {
   },
 };
 
-
 // --- Footer Component ---
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -89,9 +88,9 @@ export default function Footer() {
         initial="hidden"
         animate="visible"
         style={{
-          borderTopLeftRadius: '50% 100%',
-          borderTopRightRadius: '50% 100%',
-          transformOrigin: 'bottom center',
+          borderTopLeftRadius: "50% 100%",
+          borderTopRightRadius: "50% 100%",
+          transformOrigin: "bottom center",
         }}
       />
 
@@ -99,9 +98,10 @@ export default function Footer() {
       <div
         className="absolute inset-0 z-0 opacity-2" /* Further reduced opacity for extreme subtlety */
         style={{
-          backgroundImage: 'linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)', // Lighter grid for dark background
-          backgroundSize: '20px 20px',
-          backgroundBlendMode: 'overlay',
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)", // Lighter grid for dark background
+          backgroundSize: "20px 20px",
+          backgroundBlendMode: "overlay",
         }}
       />
 
@@ -112,14 +112,16 @@ export default function Footer() {
           className="  p-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg flex items-center justify-center" /* Blue gradient for logo background */
           variants={logoVariants}
           initial="hidden"
-         >
+        >
           {/* Favicon for logo */}
- 
         </motion.div>
 
         {/* Copyright Text - Changed to white for high contrast */}
-        <motion.span className="text-white text-lg md:text-xl font-semibold tracking-wide" variants={copyrightVariants}>
-          © {currentYear} Jindam Elevations. All rights reserved.
+        <motion.span
+          className="text-white text-lg md:text-xl font-semibold tracking-wide"
+          variants={copyrightVariants}
+        >
+          © {currentYear} FS Enterprises. All rights reserved.
         </motion.span>
 
         {/* Subtle Separator Line - Changed to a vibrant blue for effect */}

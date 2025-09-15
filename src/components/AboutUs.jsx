@@ -1,48 +1,57 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform, useInView, AnimatePresence, color } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useInView,
+  AnimatePresence,
+  color,
+} from "framer-motion";
+import Image from "next/image"; // Import Image component for optimized images
 
 // Consistent color palette - using specific hex values for device consistency
 const colors = {
   primary: {
-    orange: '#f97316', // Orange-600
-    red: '#dc2626',    // Red-600
-    blue: '#2563eb',   // Blue-600
-    indigo: '#4f46e5', // Indigo-600
-    purple: '#9333ea', // Purple-600
-    green: '#16a34a',  // Green-600
-    cyan: '#0891b2',   // Cyan-600
-    emerald: '#059669' // Emerald-600
+    orange: "#f97316", // Orange-600
+    red: "#dc2626", // Red-600
+    blue: "#2563eb", // Blue-600
+    indigo: "#4f46e5", // Indigo-600
+    purple: "#9333ea", // Purple-600
+    green: "#16a34a", // Green-600
+    cyan: "#0891b2", // Cyan-600
+    emerald: "#059669", // Emerald-600
   },
   light: {
-    orange: '#fed7aa', // Orange-200
-    red: '#fecaca',    // Red-200
-    blue: '#bfdbfe',   // Blue-200
-    indigo: '#c7d2fe', // Indigo-200
-    purple: '#ddd6fe', // Purple-200
-    green: '#bbf7d0',  // Green-200
-    gray: '#e5e7eb'    // Gray-200
+    orange: "#fed7aa", // Orange-200
+    red: "#fecaca", // Red-200
+    blue: "#bfdbfe", // Blue-200
+    indigo: "#c7d2fe", // Indigo-200
+    purple: "#ddd6fe", // Purple-200
+    green: "#bbf7d0", // Green-200
+    gray: "#e5e7eb", // Gray-200
   },
   dark: {
-    gray800: '#1f2937',
-    gray700: '#374151',
-    gray600: '#4b5563'
+    gray800: "#1f2937",
+    gray700: "#374151",
+    gray600: "#4b5563",
   },
   background: {
-    gradient: 'linear-gradient( 45deg , #fef7ed 0%, #fed7aa 25%, #fdba74 50%, #fb923c 75%, #f97316 100%)'
-  }
+    gradient:
+      "linear-gradient( 45deg , #fef7ed 0%, #fed7aa 25%, #fdba74 50%, #fb923c 75%, #f97316 100%)",
+  },
 };
 
 // Animated text component for letter-by-letter animation
 const AnimatedText = ({ text, className, delay = 0 }) => {
   const letters = text.split("");
-  
+
   const container = {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: delay }
-    })
+      transition: { staggerChildren: 0.03, delayChildren: delay },
+    }),
   };
 
   const child = {
@@ -52,8 +61,8 @@ const AnimatedText = ({ text, className, delay = 0 }) => {
       transition: {
         type: "spring",
         damping: 12,
-        stiffness: 100
-      }
+        stiffness: 100,
+      },
     },
     hidden: {
       opacity: 0,
@@ -61,9 +70,9 @@ const AnimatedText = ({ text, className, delay = 0 }) => {
       transition: {
         type: "spring",
         damping: 12,
-        stiffness: 100
-      }
-    }
+        stiffness: 100,
+      },
+    },
   };
 
   return (
@@ -81,7 +90,7 @@ const AnimatedText = ({ text, className, delay = 0 }) => {
           whileHover={{
             scale: 1.05,
             color: colors.primary.blue,
-            transition: { duration: 0.3 }
+            transition: { duration: 0.3 },
           }}
         >
           {letter === " " ? "\u00A0" : letter}
@@ -106,7 +115,7 @@ const Card3D = ({ children, className = "" }) => {
     const centerY = rect.height / 2;
     const rotateX = (y - centerY) / 15;
     const rotateY = (centerX - x) / 15;
-    
+
     setMousePosition({ x: rotateY, y: rotateX });
   };
 
@@ -146,7 +155,8 @@ const Card3D = ({ children, className = "" }) => {
 // Floating particles component
 const FloatingParticles = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const particleCount = typeof window !== 'undefined' && window.innerWidth < 768 ? 6 : 12;
+  const particleCount =
+    typeof window !== "undefined" && window.innerWidth < 768 ? 6 : 12;
   const particles = Array.from({ length: particleCount }, (_, i) => i);
 
   useEffect(() => {
@@ -158,8 +168,8 @@ const FloatingParticles = () => {
     };
 
     updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
   if (dimensions.width === 0) return null;
@@ -172,7 +182,7 @@ const FloatingParticles = () => {
           className="absolute w-1 h-1 sm:w-2 sm:h-2 rounded-full"
           style={{
             background: `linear-gradient(45deg, ${colors.primary.orange}, ${colors.primary.red})`,
-            opacity: 0.2
+            opacity: 0.2,
           }}
           initial={{
             x: Math.random() * dimensions.width,
@@ -196,34 +206,51 @@ const FloatingParticles = () => {
 };
 
 // Owner Portrait Component
-const OwnerPortrait = () => (
+const FounderPortrait = ({ photoUrl }) => (
   <motion.div
-    className="relative w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 mx-auto"
+    className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto"
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
     transition={{ duration: 1, delay: 0.5 }}
   >
-    {/* Avatar placeholder with professional styling */}
+    {/* Outer circular container with main border and background gradient */}
     <motion.div
-      className="w-full h-full rounded-full flex items-center justify-center shadow-2xl border-4"
+      className="w-full h-full rounded-full flex items-center justify-center shadow-2xl border-4 p-1" // `rounded-full` here for the circular frame
       style={{
-        background: `linear-gradient(135deg, ${colors.primary.blue} 0%, ${colors.primary.indigo} 50%, ${colors.primary.purple} 100%)`,
-        borderColor: '#ffffff'
+        background: `linear-gradient(135deg, ${colors.primary.blue} 0%, ${colors.primary.indigo} 50%, ${colors.primary.purple} 100%)`, // Background for the circular border
+        borderColor: "#ffffff", // Outer border color
+        boxShadow: `0 0 0 4px ${colors.primary.blue}30`, // Subtle glow around the main border
       }}
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      <motion.div
-        className="text-white font-bold text-2xl sm:text-3xl lg:text-4xl"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1 }}
-      >
-        VJ
-      </motion.div>
+      {/* Inner container for the actual photo, sized to fit within the circle */}
+      <div className="relative w-[70.7%] h-[70.7%] overflow-hidden rounded-lg">
+        {photoUrl ? (
+          <Image
+            src={photoUrl}
+            alt="Chandrashekhar Dhole"
+            layout="fill"
+            objectFit="cover" // Ensures image fills the square, cropping as necessary
+            className="rounded-lg border-2 border-white" // Inner white border around the square photo
+          />
+        ) : (
+          <motion.div
+            className="w-full h-full flex items-center justify-center text-white font-bold text-2xl sm:text-3xl lg:text-4xl rounded-lg" // Fallback initials with square shape
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1 }}
+            style={{
+              background: `linear-gradient(45deg, ${colors.primary.indigo}, ${colors.primary.purple})`, // Fallback gradient
+            }}
+          >
+            CD
+          </motion.div>
+        )}
+      </div>
     </motion.div>
-    
-    {/* Glowing ring effect */}
+
+    {/* Glowing ring effect (still round, as it's an outer decoration) */}
     <motion.div
       className="absolute inset-0 rounded-full border-2"
       style={{ borderColor: `${colors.primary.blue}30` }}
@@ -243,10 +270,10 @@ const OwnerPortrait = () => (
 // Experience Timeline Component
 const ExperienceStats = () => {
   const stats = [
-    { number: "10+", label: "Years Experience", icon: "🏆" },
-    { number: "500+", label: "Projects Completed", icon: "🏢" },
-    { number: "100%", label: "Client Satisfaction", icon: "⭐" },
-    { number: "24/7", label: "Support Available", icon: "🔧" }
+    { number: "20+", label: "Years Experience", icon: "🔧" },
+    { number: "100+", label: "Brands Stocked", icon: "🛠️" },
+    { number: "1000+", label: "Satisfied Clients", icon: "⭐" },
+    { number: "40+", label: "Product Categories", icon: "📦" },
   ];
 
   return (
@@ -256,16 +283,16 @@ const ExperienceStats = () => {
           key={stat.label}
           className="text-center p-4 rounded-xl border shadow-lg"
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.6)',
-            backdropFilter: 'blur(10px)',
-            borderColor: 'rgba(229, 231, 235, 0.6)'
+            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            backdropFilter: "blur(10px)",
+            borderColor: "rgba(229, 231, 235, 0.6)",
           }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 1.2 + index * 0.2 }}
-          whileHover={{ 
+          whileHover={{
             scale: 1.05,
-            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
+            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
           }}
         >
           <motion.div
@@ -280,16 +307,19 @@ const ExperienceStats = () => {
             style={{ color: colors.primary.blue }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 200, 
-              damping: 10, 
-              delay: 1.5 + index * 0.2 
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 10,
+              delay: 1.5 + index * 0.2,
             }}
           >
             {stat.number}
           </motion.div>
-          <div className="text-xs sm:text-sm font-medium" style={{ color: colors.dark.gray600 }}>
+          <div
+            className="text-xs sm:text-sm font-medium"
+            style={{ color: colors.dark.gray600 }}
+          >
             {stat.label}
           </div>
         </motion.div>
@@ -301,10 +331,26 @@ const ExperienceStats = () => {
 // Expertise Areas Component
 const ExpertiseAreas = () => {
   const expertise = [
-    { title: "ACP Solutions", desc: "Premium Aluminium Composite Paneling", colors: { from: colors.primary.blue, to: colors.primary.cyan } },
-    { title: "Glass Glazing", desc: "Modern glazing systems & facades", colors: { from: colors.primary.green, to: colors.primary.emerald } },
-    { title: "Exterior Design", desc: "Complete facade transformation", colors: { from: colors.primary.purple, to: '#ec4899' } },
-    { title: "Custom Solutions", desc: "Tailored architectural finishes", colors: { from: colors.primary.orange, to: colors.primary.red } }
+    {
+      title: "Building Materials",
+      desc: "Premium-grade materials for construction",
+      colors: { from: colors.primary.blue, to: colors.primary.cyan },
+    },
+    {
+      title: "Power Tools",
+      desc: "High-performance tools for professionals",
+      colors: { from: colors.primary.orange, to: colors.primary.red },
+    },
+    {
+      title: "Industrial Supplies",
+      desc: "Essential supplies for manufacturing",
+      colors: { from: colors.primary.green, to: colors.primary.emerald },
+    },
+    {
+      title: "Pipes & Fittings",
+      desc: "Comprehensive range for plumbing needs",
+      colors: { from: colors.primary.indigo, to: colors.primary.purple },
+    },
   ];
 
   return (
@@ -314,36 +360,43 @@ const ExpertiseAreas = () => {
           key={item.title}
           className="relative p-6 rounded-xl border shadow-lg overflow-hidden group"
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.7)',
-            backdropFilter: 'blur(10px)',
-            borderColor: 'rgba(229, 231, 235, 0.6)'
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backdropFilter: "blur(10px)",
+            borderColor: "rgba(229, 231, 235, 0.6)",
           }}
           initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 2 + index * 0.2 }}
-          whileHover={{ 
+          whileHover={{
             scale: 1.02,
-            boxShadow: "0 15px 35px -5px rgba(0, 0, 0, 0.1)"
+            boxShadow: "0 15px 35px -5px rgba(0, 0, 0, 0.1)",
           }}
         >
           <motion.div
             className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300"
             style={{
-              background: `linear-gradient(45deg, ${item.colors.from}, ${item.colors.to})`
+              background: `linear-gradient(45deg, ${item.colors.from}, ${item.colors.to})`,
             }}
           />
           <motion.div
             className="inline-flex items-center px-3 py-1 text-white text-xs font-semibold rounded-full mb-3"
             style={{
-              background: `linear-gradient(45deg, ${item.colors.from}, ${item.colors.to})`
+              background: `linear-gradient(45deg, ${item.colors.from}, ${item.colors.to})`,
             }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, delay: 2.2 + index * 0.2 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              delay: 2.2 + index * 0.2,
+            }}
           >
             {item.title}
           </motion.div>
-          <p className="text-sm sm:text-base font-medium" style={{ color: colors.dark.gray700 }}>
+          <p
+            className="text-sm sm:text-base font-medium"
+            style={{ color: colors.dark.gray700 }}
+          >
             {item.desc}
           </p>
         </motion.div>
@@ -352,7 +405,7 @@ const ExpertiseAreas = () => {
   );
 };
 
-export default function AboutSection() {
+export default function FounderSection({ photoUrl = null }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef(null);
@@ -366,10 +419,10 @@ export default function AboutSection() {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const handleMouseMove = (e) => {
@@ -384,12 +437,14 @@ export default function AboutSection() {
   };
 
   const backgroundStyle = {
-    background: isMobile ? 
-      colors.background.gradient :
-      `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, 
-      rgba(251, 146, 60, 0.08) 0%, 
-      rgba(249, 115, 22, 0.05) 25%, 
-      rgba(234, 88, 12, 0.03) 50%, 
+    background: isMobile
+      ? colors.background.gradient
+      : `radial-gradient(circle at ${mousePosition.x * 100}% ${
+          mousePosition.y * 100
+        }%, 
+      rgba(249, 115, 22, 0.08) 0%, 
+      rgba(220, 38, 38, 0.05) 25%, 
+      rgba(251, 146, 60, 0.03) 50%, 
       transparent 70%),
       ${colors.background.gradient}`,
   };
@@ -404,13 +459,13 @@ export default function AboutSection() {
     >
       {/* Animated Background Elements */}
       <FloatingParticles />
-      
+
       {/* Geometric shapes in background - hidden on mobile for performance */}
       {!isMobile && (
         <>
           <motion.div
             className="absolute top-20 right-20 w-24 h-24 border-2 rounded-lg rotate-45"
-            style={{ borderColor: `${colors.light.orange}66`,y: y1 }}
+            style={{ borderColor: `${colors.light.orange}66`, y: y1 }}
             animate={{
               rotate: [45, 135, 45],
               scale: [1, 1.1, 1],
@@ -419,13 +474,14 @@ export default function AboutSection() {
               rotate: { duration: 20, repeat: Infinity, ease: "linear" },
               scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
             }}
-           />
-          
+          />
+
           <motion.div
             className="absolute bottom-32 left-32 w-16 h-16 rounded-full"
             style={{
               background: `linear-gradient(45deg, ${colors.primary.red}10, ${colors.primary.orange}10)`,
-              backdropFilter: 'blur(10px)',y: y2
+              backdropFilter: "blur(10px)",
+              y: y2,
             }}
             animate={{
               x: [-10, 10, -10],
@@ -436,13 +492,12 @@ export default function AboutSection() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-           />
+          />
         </>
       )}
 
       {/* Content Container */}
       <div className="max-w-7xl mx-auto">
-        
         {/* Section Header */}
         <motion.div
           className="text-center mb-12 sm:mb-16 lg:mb-20"
@@ -455,45 +510,46 @@ export default function AboutSection() {
             style={{
               background: `linear-gradient(45deg, #fff7ed, #fef2f2)`,
               borderColor: `${colors.light.orange}99`,
-              color: colors.primary.orange
+              color: colors.primary.orange,
             }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <span className="w-2 h-2 rounded-full mr-2 animate-pulse" style={{ backgroundColor: colors.primary.orange }}></span>
-            About Jindam Elevations
+            <span
+              className="w-2 h-2 rounded-full mr-2 animate-pulse"
+              style={{ backgroundColor: colors.primary.orange }}
+            ></span>
+            About F S Enterprises
           </motion.div>
 
           <AnimatedText
-            text="Meet Our Founder"
-            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black  mb-4 leading-tight"
+            text="Meet Our Founder & Hardware Expert"
+            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black mb-4 leading-tight"
             style={{
               background: `linear-gradient(45deg, ${colors.dark.gray800}, ${colors.primary.orange}, ${colors.primary.red})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-               
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
             }}
             delay={0.5}
           />
-          
+
           <motion.div
             className="h-1 rounded-full mx-auto"
             style={{
               background: `linear-gradient(45deg, ${colors.primary.orange}, ${colors.primary.red})`,
-              width: '8rem'
+              width: "10rem",
             }}
             initial={{ width: 0 }}
-            animate={isInView ? { width: "8rem" } : {}}
+            animate={isInView ? { width: "10rem" } : {}}
             transition={{ duration: 1, delay: 1.2 }}
           />
         </motion.div>
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
-          
-          {/* Left Column - Owner Info */}
+          {/* Left Column - Founder Info */}
           <motion.div
             className="space-y-8"
             initial={{ opacity: 0, x: -100 }}
@@ -502,8 +558,9 @@ export default function AboutSection() {
           >
             <Card3D>
               <div className="text-center lg:text-left">
-                <OwnerPortrait />
-                
+                {/* To add a photo, pass the URL to the photoUrl prop */}
+                <FounderPortrait photoUrl="/Fs_Owner.png" />
+
                 <motion.div
                   className="mt-6"
                   initial={{ opacity: 0, y: 30 }}
@@ -511,17 +568,17 @@ export default function AboutSection() {
                   transition={{ duration: 0.6, delay: 1.5 }}
                 >
                   <AnimatedText
-                    text="Vinay Vyankatesh Jindam"
+                    text="Chandrashekhar Dhole"
                     className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2"
                     style={{
                       background: `linear-gradient(45deg, ${colors.primary.blue}, ${colors.primary.indigo})`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text'
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
                     }}
                     delay={1.8}
                   />
-                  
+
                   <motion.p
                     className="text-lg sm:text-xl font-semibold mb-4"
                     style={{ color: colors.primary.orange }}
@@ -529,22 +586,25 @@ export default function AboutSection() {
                     animate={isInView ? { opacity: 1 } : {}}
                     transition={{ duration: 0.6, delay: 2.5 }}
                   >
-                    Founder & Owner
+                    Founder & CEO
                   </motion.p>
-                  
+
                   <motion.div
                     className="inline-flex items-center px-4 py-2 border rounded-full text-sm font-medium"
                     style={{
-                      background: `linear-gradient(45deg, #f0fdf4, #ecfdf5)`,
-                      borderColor: colors.light.green,
-                      color: colors.primary.green
+                      background: `linear-gradient(45deg, ${colors.light.green}, #ecfdf5)`,
+                      borderColor: colors.primary.green,
+                      color: colors.primary.green,
                     }}
                     initial={{ opacity: 0, scale: 0 }}
                     animate={isInView ? { opacity: 1, scale: 1 } : {}}
                     transition={{ type: "spring", stiffness: 200, delay: 2.8 }}
                   >
-                    <span className="w-2 h-2 rounded-full mr-2 animate-pulse" style={{ backgroundColor: colors.primary.green }}></span>
-                    Leading Since 2013
+                    <span
+                      className="w-2 h-2 rounded-full mr-2 animate-pulse"
+                      style={{ backgroundColor: colors.primary.green }}
+                    ></span>
+                    Wholesale Since 2005
                   </motion.div>
                 </motion.div>
               </div>
@@ -565,14 +625,18 @@ export default function AboutSection() {
               <motion.div
                 className="p-6 sm:p-8 rounded-2xl border shadow-xl"
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                  backdropFilter: 'blur(10px)',
-                  borderColor: 'rgba(229, 231, 235, 0.6)'
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  backdropFilter: "blur(10px)",
+                  borderColor: "rgba(229, 231, 235, 0.6)",
                 }}
-                whileHover={!isMobile ? {
-                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
-                  borderColor: `${colors.primary.orange}4D`,
-                } : {}}
+                whileHover={
+                  !isMobile
+                    ? {
+                        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
+                        borderColor: `${colors.primary.orange}4D`,
+                      }
+                    : {}
+                }
               >
                 <motion.h3
                   className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6"
@@ -583,7 +647,7 @@ export default function AboutSection() {
                 >
                   Our Story
                 </motion.h3>
-                
+
                 <motion.div
                   className="space-y-4 leading-relaxed"
                   style={{ color: colors.dark.gray700 }}
@@ -592,25 +656,46 @@ export default function AboutSection() {
                   transition={{ duration: 0.8, delay: 1 }}
                 >
                   <p className="text-sm sm:text-base lg:text-lg">
-                    <strong style={{ color: colors.primary.orange }}>Jindam Elevations</strong> is a trusted name in exterior design solutions, specializing in <strong style={{ color: colors.primary.blue }}>Aluminium Composite Paneling (ACP)</strong>, <strong style={{ color: colors.primary.indigo }}>Exterior Composite Paneling</strong>, and <strong style={{ color: colors.primary.purple }}>Glass Glazing</strong>. With over a decade of hands-on experience, we help bring architectural visions to life by enhancing the exteriors of commercial and residential buildings with precision, durability, and style.
+                    <strong style={{ color: colors.primary.orange }}>
+                      F S Enterprises
+                    </strong>{" "}
+                    has been a cornerstone of the hardware wholesale industry
+                    since its inception. Founded by **Chandrashekhar Dhole**,
+                    our mission has always been to provide businesses,
+                    contractors, and builders with a comprehensive inventory of
+                    top-quality{" "}
+                    <strong style={{ color: colors.primary.blue }}>
+                      tools, building materials, and industrial supplies
+                    </strong>
+                    .
                   </p>
-                  
+
                   <p className="text-sm sm:text-base lg:text-lg">
-                    Our expertise lies in transforming building facades using high-quality ACP sheets, offering modern aesthetics along with long-lasting protection. We collaborate closely with architects, engineers, builders, and business owners to deliver custom exterior finishes for new shops, buildings, and commercial complexes.
+                    We understand the critical role that reliable products play
+                    in every project. That's why we've built a reputation for
+                    stocking a wide variety of trusted brands and ensuring our
+                    clients have access to the materials they need, exactly when
+                    they need them. Our deep industry knowledge and
+                    customer-centric approach have made us a go-to partner in
+                    the region.
                   </p>
-                  
+
                   <motion.div
                     className="relative p-4 border-l-4 rounded-r-lg mt-6"
                     style={{
                       background: `linear-gradient(45deg, #fff7ed, #fef2f2)`,
-                      borderLeftColor: colors.primary.orange
+                      borderLeftColor: colors.primary.orange,
                     }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={isInView ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.6, delay: 1.5 }}
                   >
-                    <p className="text-sm sm:text-base lg:text-lg font-semibold italic" style={{ color: colors.dark.gray800 }}>
-                      "At Jindam Elevations, we don't just build exteriors, we craft impressions"
+                    <p
+                      className="text-sm sm:text-base lg:text-lg font-semibold italic"
+                      style={{ color: colors.dark.gray800 }}
+                    >
+                      "We don't just sell hardware; we supply the foundation for
+                      your success."
                     </p>
                   </motion.div>
                 </motion.div>
@@ -636,9 +721,10 @@ export default function AboutSection() {
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 3.3 }}
           >
-            Ready to transform your building's exterior? Let's create something extraordinary together.
+            Partner with us for all your hardware needs and build your next
+            project with confidence.
           </motion.p>
-          
+
           <motion.div
             className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto"
             initial={{ opacity: 0, y: 30 }}
@@ -648,22 +734,26 @@ export default function AboutSection() {
             <motion.button
               className="relative px-8 py-4 text-white font-semibold rounded-xl overflow-hidden group shadow-lg"
               style={{
-                background: `linear-gradient(45deg, ${colors.primary.orange}, ${colors.primary.red})`
+                background: `linear-gradient(45deg, ${colors.primary.orange}, ${colors.primary.red})`,
               }}
-              whileHover={!isMobile ? { 
-                scale: 1.05,
-                boxShadow: `0 20px 40px -12px ${colors.primary.orange}66`
-              } : {}}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      boxShadow: `0 20px 40px -12px ${colors.primary.orange}66`,
+                    }
+                  : {}
+              }
               whileTap={{ scale: 0.95 }}
             >
               <motion.div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{
-                  background: `linear-gradient(45deg, ${colors.primary.red}, #ec4899)`
+                  background: `linear-gradient(45deg, ${colors.primary.red}, #ec4899)`,
                 }}
               />
               <span className="relative z-10 flex items-center justify-center">
-                <span>Get Started Today</span>
+                <span>Explore Products</span>
                 <motion.span
                   className="ml-2"
                   animate={{ x: [0, 5, 0] }}
@@ -678,25 +768,27 @@ export default function AboutSection() {
               className="px-8 py-4 border-2 font-semibold rounded-xl transition-all duration-300 group"
               style={{
                 borderColor: colors.light.gray,
-                color: colors.dark.gray700
+                color: colors.dark.gray700,
               }}
-              whileHover={!isMobile ? { 
-                scale: 1.05,
-                borderColor: colors.primary.orange,
-                color: '#c2410c',
-                backgroundColor: '#fff7ed'
-              } : {
-                borderColor: colors.primary.orange,
-                color: '#c2410c',
-                backgroundColor: '#fff7ed'
-              }}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      borderColor: colors.primary.orange,
+                      color: "#c2410c",
+                      backgroundColor: "#fff7ed",
+                    }
+                  : {
+                      borderColor: colors.primary.orange,
+                      color: "#c2410c",
+                      backgroundColor: "#fff7ed",
+                    }
+              }
               whileTap={{ scale: 0.95 }}
             >
               <span className="flex items-center justify-center">
-                Contact Us
-                <motion.span
-                  className="ml-2 transform group-hover:rotate-90 transition-transform duration-300"
-                >
+                Get a Quote
+                <motion.span className="ml-2 transform group-hover:rotate-90 transition-transform duration-300">
                   ✦
                 </motion.span>
               </span>
