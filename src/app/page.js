@@ -12,6 +12,7 @@ import AboutUs from "@/components/AboutUs";
 import ContactUs from "@/components/ContactUs";
 import Services from "@/components/Services";
 import Footer from "@/components/Footer";
+import Projects from "@/components/Projects";
 
 // --- ENHANCED Animation Variants ---
 const contentFadeIn = {
@@ -477,6 +478,15 @@ export default function Home() {
             transition={{ delay: 0.6 }}
           >
             <Services />
+          </motion.section>
+          <motion.section
+            id="projects"
+            variants={sectionSlideIn}
+            initial="hidden"
+            animate={!isLoading ? "visible" : "hidden"}
+            transition={{ delay: 1.2 }}
+          >
+            <Projects />
           </motion.section>
 
           <motion.section

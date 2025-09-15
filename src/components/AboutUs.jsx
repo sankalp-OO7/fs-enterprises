@@ -229,7 +229,7 @@ const FounderPortrait = ({ photoUrl }) => (
         {photoUrl ? (
           <Image
             src={photoUrl}
-            alt="Chandrashekhar Dhole"
+            alt="Chandrashekhar Dhone"
             layout="fill"
             objectFit="cover" // Ensures image fills the square, cropping as necessary
             className="rounded-lg border-2 border-white" // Inner white border around the square photo
@@ -568,7 +568,7 @@ export default function FounderSection({ photoUrl = null }) {
                   transition={{ duration: 0.6, delay: 1.5 }}
                 >
                   <AnimatedText
-                    text="Chandrashekhar Dhole"
+                    text="Chandrashekhar Dhone"
                     className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2"
                     style={{
                       background: `linear-gradient(45deg, ${colors.primary.blue}, ${colors.primary.indigo})`,
@@ -660,7 +660,7 @@ export default function FounderSection({ photoUrl = null }) {
                       F S Enterprises
                     </strong>{" "}
                     has been a cornerstone of the hardware wholesale industry
-                    since its inception. Founded by **Chandrashekhar Dhole**,
+                    since its inception. Founded by **Chandrashekhar Dhone**,
                     our mission has always been to provide businesses,
                     contractors, and builders with a comprehensive inventory of
                     top-quality{" "}

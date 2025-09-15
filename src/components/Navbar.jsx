@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 const navItems = [
   { label: "About", to: "about-us" },
   { label: "Services", to: "services" },
-  // { label: "Projects", to: "projects" },
+  { label: "Projects", to: "projects" },
   // { label: "Gallery", to: "career" },
   { label: "Contact", to: "contact-us" },
 ];
