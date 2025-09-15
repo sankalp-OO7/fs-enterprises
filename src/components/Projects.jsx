@@ -1,7 +1,7 @@
 // src/components/Demo.jsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
 // You will place these images in your public/ folder
@@ -475,6 +475,7 @@ const ProductCard = ({ product, index, onCardClick }) => {
       animate={isInView ? "visible" : "hidden"}
       className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden relative cursor-pointer group"
       onClick={() => onCardClick(product)}
+      layoutId={`product-card-${product.id}`} // Added for magic motion
     >
       <div className="relative h-48 sm:h-56 flex items-center justify-center overflow-hidden">
         {product.image ? (
@@ -522,11 +523,21 @@ const ProductModal = ({ product, onClose }) => {
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.8, y: -100 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.8, y: 100 }}
+        layoutId={`product-card-${product.id}`} // Added for magic motion
+        initial={{ y: "100%", x: "-50%", left: "50%", borderRadius: "1.5rem" }} // Initial state for mobile bottom-up animation
+        animate={{
+          y: "0%",
+          x: 0,
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          borderRadius: 0,
+        }} // Final state for full-screen on mobile
+        exit={{ y: "100%", x: "-50%", left: "50%", borderRadius: "1.5rem" }} // Exit animation for mobile
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="bg-white rounded-xl max-w-4xl w-full p-6 sm:p-8 relative shadow-2xl"
+        className="fixed bottom-0 left-0 right-0 h-full max-w-4xl w-full p-6 sm:p-8 relative shadow-2xl bg-white rounded-t-3xl overflow-y-auto 
+                   lg:relative lg:bottom-auto lg:left-auto lg:right-auto lg:h-auto lg:rounded-xl lg:max-w-4xl lg:w-full lg:p-6 lg:transform-none" // Responsive classes
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
         <button
@@ -657,15 +668,18 @@ export default function Demo() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {allProducts.map((product, index) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            index={index}
-            onCardClick={handleCardClick}
-          />
-        ))}
+      {/* Scrollable Product Grid */}
+      <div className="overflow-y-scroll max-h-[80vh] py-8 px-4 sm:p-6 lg:p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {allProducts.map((product, index) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              index={index}
+              onCardClick={handleCardClick}
+            />
+          ))}
+        </div>
       </div>
 
       <AnimatePresence>
