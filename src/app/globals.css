@@ -24,3 +24,180 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* -----------------------
+   Hardware-theme (APPEND)
+   Safe: DOES NOT override your existing vars
+   ----------------------- */
+
+/* Only define these if they don't exist (browser will use existing ones if set) */
+:root{
+  --hardware-orange: #f97316;
+  --hardware-gray: #374151;
+  --hardware-darkgray: #1f2937;
+  --hardware-lightgray: #e5e7eb;
+
+  --accent-blue: #2563eb;
+  --accent-green: #16a34a;
+  --accent-red: #dc2626;
+
+  /* background gradient fallback — uses your --background if you want single color base */
+  --hardware-bg-gradient: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 50%, #d1d5db 100%);
+}
+
+/* If you already have --background / --foreground, use them */
+body {
+  /* keep the body's background using existing variable; fallback to hardware gradient */
+  background: var(--background, var(--hardware-bg-gradient));
+  color: var(--foreground, var(--hardware-darkgray));
+}
+
+/* Page wrapper for centered card */
+.page-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative accent behind card — non-invasive */
+.page-accent {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(600px 400px at 10% 20%, rgba(249,115,22,0.06), transparent 10%),
+    radial-gradient(500px 300px at 80% 80%, rgba(37,99,235,0.04), transparent 10%);
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* Login card */
+.login-card {
+  width: min(520px, 96%);
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.92),
+    rgba(255,255,255,0.86));
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 20px 50px rgba(15,23,42,0.10);
+  border: 1px solid rgba(31,41,55,0.06);
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  position: relative;
+  z-index: 10;
+  transition: transform 260ms cubic-bezier(.2,.9,.3,1), box-shadow 260ms;
+}
+
+/* Hover lift (subtle) */
+.login-card:hover {
+  transform: translateY(-6px) rotateX(1deg);
+  box-shadow: 0 30px 80px rgba(15,23,42,0.16);
+}
+
+/* Headings inside card use existing foreground color */
+.login-card h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  color: var(--foreground, var(--hardware-darkgray));
+  letter-spacing: -0.01em;
+}
+
+/* subtitle */
+.login-card p.lead {
+  margin: 0 0 1.25rem 0;
+  color: rgba(17,24,39,0.6); /* gentle muted text (will be visible on white) */
+  font-size: 0.95rem;
+}
+
+/* Form layout */
+.login-form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* Input styles (non-invasive) */
+.input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(31,41,55,0.08);
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(249,250,251,0.95));
+  outline: none;
+  font-size: 0.95rem;
+  color: var(--foreground, var(--hardware-darkgray));
+  transition: box-shadow 180ms, border-color 180ms, transform 180ms;
+}
+
+/* Input focus uses accent-blue variable */
+.input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 10px 30px rgba(37,99,235,0.06), 0 0 0 4px rgba(37,99,235,0.06);
+  transform: translateY(-1px);
+}
+
+/* small helper line */
+.form-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:0.5rem;
+}
+
+/* Primary button uses hardware orange token */
+.btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+  padding: 0.9rem 1.1rem;
+  background: linear-gradient(90deg, var(--hardware-orange), #fb923c);
+  color: white;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(249,115,22,0.14);
+  transition: transform 160ms, box-shadow 160ms, filter 160ms;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: saturate(1.05);
+  box-shadow: 0 18px 40px rgba(249,115,22,0.18);
+}
+
+/* Link styles */
+.link-muted {
+  color: var(--hardware-gray);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+/* small text */
+.small {
+  font-size: 0.88rem;
+  color: rgba(17,24,39,0.6);
+}
+
+/* form divider */
+.or {
+  display:flex;
+  align-items:center;
+  gap:1rem;
+  margin: 0.9rem 0;
+}
+.or .line { flex:1; height:1px; background: rgba(17,24,39,0.06); border-radius:1px; }
+.or span { font-size:0.9rem; color: rgba(17,24,39,0.6); }
+
+/* responsive tweaks */
+@media (max-width:640px) {
+  .login-card { padding: 1.25rem; border-radius: 14px; }
+  .login-card h1 { font-size: 1.4rem; }
+  .input { padding: 0.8rem; }
+  .btn { padding: 0.8rem; }
+}
