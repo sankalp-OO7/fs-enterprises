@@ -2,7 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "@/store/slices/authSlice";
 
 // --- Nav items ---
 const navItems = [
@@ -158,6 +160,8 @@ const Particles = ({ isDesktop }) => {
 // --- Component ---
 function NavbarComponent() {
   const router = useRouter();
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mounted, setMounted] = useState(false);
@@ -244,6 +248,13 @@ function NavbarComponent() {
     );
   }
 
+  const filteredNavItems = navItems.filter((item) => {
+    if (item.to === "adminPanel") {
+      return user?.role === "admin"; // only show for admin
+    }
+    return true; // show all other items
+  });
+
   return (
     <>
       {/* Floating animated particles (Desktop only for perf) */}
@@ -306,7 +317,7 @@ function NavbarComponent() {
           {/* Desktop Navigation */}
           {isDesktop && (
             <ul className="flex gap-4 xl:gap-6 ml-4">
-              {navItems.map(({ label, to }) => (
+              {filteredNavItems.map(({ label, to }) => (
                 <motion.li
                   key={to}
                   variants={navItemVariants}
@@ -316,7 +327,13 @@ function NavbarComponent() {
                   className="flex flex-col items-center relative"
                 >
                   <motion.button
-                    onClick={() => to === 'adminPanel' ? router.push('/adminPanel') : to === 'profile' ? router.push('/profile') : scrollToSection(to)}
+                    onClick={() =>
+                      to === "adminPanel"
+                        ? router.push("/adminPanel")
+                        : to === "profile"
+                        ? router.push("/profile")
+                        : scrollToSection(to)
+                    }
                     className={`
                       px-6 py-3 rounded-xl font-medium relative transition-all duration-200 text-base xl:text-lg
                       ${
@@ -352,6 +369,23 @@ function NavbarComponent() {
               ))}
             </ul>
           )}
+          <li>
+            {user ? (
+              <motion.button
+                onClick={() => dispatch(logout())}
+                className="px-6 py-3 rounded-xl font-medium transition-all duration-200 text-white bg-red-500 hover:bg-red-600 shadow-md"
+              >
+                Logout
+              </motion.button>
+            ) : (
+              <motion.button
+                onClick={() => router.push("/login")}
+                className="px-6 py-3 rounded-xl font-medium transition-all duration-200 text-white bg-green-500 hover:bg-green-600 shadow-md"
+              >
+                Login
+              </motion.button>
+            )}
+          </li>
 
           {/* Hamburger (Mobile) - Animated icon - Only visible when drawer is NOT open */}
           {!isDesktop && !isDrawerOpen && (
@@ -384,17 +418,18 @@ function NavbarComponent() {
           {/* Close Button (Mobile) - Only visible when drawer IS open */}
           {!isDesktop && isDrawerOpen && (
             <motion.button
-              onClick={() => {if (to === 'adminPanel') {
-                        // navigate to /admin route
-                        router.push('/adminPanel');
-                      }
-                      if(to === 'profile') {
-                        router.push('/profile');
-                      }
-                      else {
-                        scrollToSection(to);
-                      }
-                       setIsDrawerOpen(false)} }// Only closes the drawer
+              onClick={() => {
+                if (to === "adminPanel") {
+                  // navigate to /admin route
+                  router.push("/adminPanel");
+                }
+                if (to === "profile") {
+                  router.push("/profile");
+                } else {
+                  scrollToSection(to);
+                }
+                setIsDrawerOpen(false);
+              }} // Only closes the drawer
               initial={{ opacity: 0, rotate: -90 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: 90 }}
@@ -439,7 +474,7 @@ function NavbarComponent() {
           >
             {/* The close button is now outside this div but within the Navbar component for better z-indexing control */}
             <ul className="flex flex-col gap-6 text-center w-full max-w-xs px-4">
-              {navItems.map(({ label, to }) => (
+              {filteredNavItems.map(({ label, to }) => (
                 <motion.li
                   key={to}
                   variants={navItemVariants}
@@ -450,8 +485,16 @@ function NavbarComponent() {
                 >
                   <motion.button
                     onClick={() => {
-                      scrollToSection(to);
-                      setIsDrawerOpen(false); // Close drawer on item click
+                      if(to === "adminPanel") {
+                        // navigate to /admin route
+                        router.push("/adminPanel");
+                      }
+                      if(to === "profile") {
+                        router.push("/profile");
+                      } else{
+                        scrollToSection(to);
+                        setIsDrawerOpen(false); // Close drawer on item click
+                      }
                     }}
                     className={`
                       px-10 py-5 text-2xl font-semibold rounded-xl transition-all duration-200 w-full
@@ -468,6 +511,29 @@ function NavbarComponent() {
                 </motion.li>
               ))}
             </ul>
+            <li className="flex flex-col items-center w-full mt-6">
+              {user ? (
+                <motion.button
+                  onClick={() => {
+                    dispatch(logout());
+                    setIsDrawerOpen(false); // close drawer
+                  }}
+                  className="px-10 py-5 text-2xl font-semibold rounded-xl transition-all duration-200 w-full bg-red-500 hover:bg-red-600 shadow-lg hover:shadow-xl"
+                >
+                  Logout
+                </motion.button>
+              ) : (
+                <motion.button
+                  onClick={() => {
+                    router.push("/login");
+                    setIsDrawerOpen(false); // close drawer
+                  }}
+                  className="px-10 py-5 text-2xl font-semibold rounded-xl transition-all duration-200 w-full bg-green-500 hover:bg-green-600 shadow-lg hover:shadow-xl"
+                >
+                  Login
+                </motion.button>
+              )}
+            </li>
           </motion.div>
         )}
       </AnimatePresence>

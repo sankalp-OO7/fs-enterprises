@@ -1,13 +1,33 @@
 'use client';
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 
 export default function ProfilePage() {
-  const [user] = useState({
-    name: 'Harikrishna Bomen',
-    email: 'hari@example.com',
-    role: 'Admin'
-  });
+  const user = useSelector((state) => state.auth.user); // get user from Redux
+
+  if (!user) {
+    return (
+      <main style={{ padding: 20, fontFamily: 'Arial, sans-serif' }}>
+        <p style={{ color: 'black', fontSize: '18px' }}>You are not logged in.</p>
+        <Link
+          href="/login"
+          style={{
+            display: 'inline-block',
+            marginTop: '20px',
+            padding: '10px 20px',
+            background: '#0070f3',
+            color: 'white',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            fontWeight: 500,
+            transition: 'background 0.2s ease',
+          }}
+        >
+          Go to Login
+        </Link>
+      </main>
+    );
+  }
 
   return (
     <main style={{ padding: 20, fontFamily: 'Arial, sans-serif' }}>
@@ -27,7 +47,7 @@ export default function ProfilePage() {
           borderRadius: '6px',
           textDecoration: 'none',
           fontWeight: 500,
-          transition: 'background 0.2s ease'
+          transition: 'background 0.2s ease',
         }}
       >
         Go to Home

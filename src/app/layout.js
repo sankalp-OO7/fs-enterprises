@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -190,9 +191,11 @@ export default function RootLayout({ children }) {
           Skip to main content
         </a>
 
+          <Providers>
         <main id="main-content" itemProp="mainContentOfPage">
           {children}
         </main>
+        </Providers>
 
         {/* Comprehensive Schema.org Structured Data - No External Assets Required */}
         <script
