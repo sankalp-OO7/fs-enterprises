@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { useRouter } from 'next/navigation'; 
 
 // --- Nav items ---
 const navItems = [
@@ -10,6 +11,8 @@ const navItems = [
   { label: "Projects", to: "projects" },
   // { label: "Gallery", to: "career" },
   { label: "Contact", to: "contact-us" },
+  { label: "Admin Panel", to: "adminPanel" },
+  { label: "Profile", to: "profile" },
 ];
 
 // --- Utility: Smooth scroll ---
@@ -154,6 +157,7 @@ const Particles = ({ isDesktop }) => {
 
 // --- Component ---
 function NavbarComponent() {
+  const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [mounted, setMounted] = useState(false);
@@ -312,7 +316,7 @@ function NavbarComponent() {
                   className="flex flex-col items-center relative"
                 >
                   <motion.button
-                    onClick={() => scrollToSection(to)}
+                    onClick={() => to === 'adminPanel' ? router.push('/adminPanel') : to === 'profile' ? router.push('/profile') : scrollToSection(to)}
                     className={`
                       px-6 py-3 rounded-xl font-medium relative transition-all duration-200 text-base xl:text-lg
                       ${
@@ -380,7 +384,17 @@ function NavbarComponent() {
           {/* Close Button (Mobile) - Only visible when drawer IS open */}
           {!isDesktop && isDrawerOpen && (
             <motion.button
-              onClick={() => setIsDrawerOpen(false)} // Only closes the drawer
+              onClick={() => {if (to === 'adminPanel') {
+                        // navigate to /admin route
+                        router.push('/adminPanel');
+                      }
+                      if(to === 'profile') {
+                        router.push('/profile');
+                      }
+                      else {
+                        scrollToSection(to);
+                      }
+                       setIsDrawerOpen(false)} }// Only closes the drawer
               initial={{ opacity: 0, rotate: -90 }}
               animate={{ opacity: 1, rotate: 0 }}
               exit={{ opacity: 0, rotate: 90 }}
